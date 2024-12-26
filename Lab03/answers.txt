@@ -1,0 +1,45 @@
+To test whether a programming language is passing by value or passing by reference, we usually use the swap method. This method aims to swap an object to another object. 
+●	After the call of swap(jungleDVD, cinderellaDVD) why does the title of these two objects still remain?
+●	After the call of changeTitle(jungleDVD, cinderellaDVD.getTitle()) why is the title of the JungleDVD changed?
+1. Why does the title of the two objects still remain the same after calling swap(jungleDVD, cinderellaDVD)?
+This behavior depends on how Java handles method parameters, specifically whether it uses pass-by-value or pass-by-reference. In Java, everything is passed by value, but there's a distinction between how primitive types and objects are passed.
+
+When you pass primitive types to a method, the actual value is passed, and the method cannot change the original value.
+When you pass objects, what is passed is the reference to the object, but since the reference itself is passed by value, the method can modify the contents of the object but cannot change the original reference.
+Now, in the case of your swap method:
+
+If you swap two objects, Java will pass the references (the memory addresses pointing to the objects) by value.
+Inside the method, the references to the two objects are swapped, but after the method finishes, the references are lost and the objects outside the method still point to the original objects.
+The object references themselves are passed by value, meaning that the method works with copies of the references, not the actual references themselves. Thus, swapping the references inside the method doesn't affect the original references outside.
+Here's a quick illustration of what might happen:
+
+java
+Copy code
+public void swap(DigitalVideoDisc dvd1, DigitalVideoDisc dvd2) {
+    // Swap the references inside the method (doesn't affect the original references)
+    DigitalVideoDisc temp = dvd1;
+    dvd1 = dvd2;
+    dvd2 = temp;
+}
+After the swap, the references (jungleDVD and cinderellaDVD) in the calling method will still point to their original objects, so their titles will remain unchanged.
+
+2. Why does the title of jungleDVD change after calling changeTitle(jungleDVD, cinderellaDVD.getTitle())?
+In this case, the title of jungleDVD changes because the method changeTitle is modifying the contents of the object referenced by jungleDVD, not the reference itself. Here’s why:
+
+When you call changeTitle(jungleDVD, cinderellaDVD.getTitle()), you're passing the reference of jungleDVD to the method. The method receives this reference and can modify the properties of the object that jungleDVD refers to.
+Inside the method, since you are passing the reference to the object, any changes made to the object’s attributes (such as the title) will persist even after the method returns.
+For example, consider the following code:
+
+java
+Copy code
+public void changeTitle(DigitalVideoDisc dvd, String newTitle) {
+    dvd.setTitle(newTitle);  // Modify the title of the object
+}
+jungleDVD is passed by reference, and the method modifies the title of the object it points to (i.e., the title of the jungleDVD object).
+The reference to jungleDVD is passed by value, but the object that jungleDVD points to is modified (i.e., the title).
+Even though the reference itself isn't modified (i.e., jungleDVD still points to the original object), the title attribute of the object it refers to is updated.
+
+Summary of Key Points:
+Pass-by-Value: In Java, all arguments are passed by value. For objects, this means passing a copy of the reference (not the object itself).
+Swapping References: In a swap method, swapping the references only affects the local copies of the references within the method. The original references outside the method remain unchanged.
+Changing Object Attributes: When modifying the properties (attributes) of an object (like changing the title of jungleDVD), the changes are reflected because the method is modifying the object itself, not the reference.
